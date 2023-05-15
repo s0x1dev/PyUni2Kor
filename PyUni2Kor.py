@@ -1,7 +1,7 @@
 import sys
 import os
 from PyQt5.QtWidgets import *
-from PyQt5 import uic   # ui 파일을 사용하기 위한 모듈 import
+from PyQt5 import uic
 from PyQt5.QtCore import Qt
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__)) 
@@ -14,11 +14,13 @@ class MyWindow(QMainWindow, UI_class):
         self.plainTextEdit_uni.textChanged.connect(self.update_kor)
         self.plainTextEdit_kor.textChanged.connect(self.update_uni)
         self.checkBox_alwaysOnTop.setChecked(True)
+        self.setWindowFlags(self.windowFlags() | Qt.WindowStaysOnTopHint) # always on top을 default로 설정
+        self.show()
         self.checkBox_alwaysOnTop.stateChanged.connect(self.toggle_always_on_top)
 
     def update_kor(self):
         text = self.plainTextEdit_uni.toPlainText()
-        text = text.replace('\\\\u', '\\u')
+        text = text.replace('\\\\u', '\\u') # AWS에서 표시되는 unicode 양식 변경
         self.plainTextEdit_kor.blockSignals(True)
         self.plainTextEdit_kor.setPlainText(text.encode('utf-8').decode('unicode_escape'))
         self.plainTextEdit_kor.blockSignals(False)
